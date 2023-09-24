@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import SortingVisualizer from './Components/SortingVisualizer'
 
 function App() {
 
   return (
-    <>
-    <h1>sorting visualizer</h1>
-    </>
+    <div>
+      <SortingVisualizer />
+    </div>
   )
 }
 
