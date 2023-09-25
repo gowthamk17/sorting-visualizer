@@ -26,7 +26,7 @@ function SortingVisualizer() {
                     arr[j] = temp
                     return arr;
                 })
-            }, index * 100);
+            }, index * 400);
         })
     }
 
