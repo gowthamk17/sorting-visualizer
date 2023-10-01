@@ -1,56 +1,85 @@
 import { useState, useEffect } from "react";
 import Bars from "./Bars";
 import bubbleSort from "../algorithms/bubblesort";
+import Alert from "./alert";
 import insertionSort from "../algorithms/insertionsort";
+import { shuffle, swap } from "../algorithms/helper";
 
+const DELAY = 100
+const BAR_COUNT = 50
 
 function SortingVisualizer() {
-    const [numArray, setNumArray] = useState(Array.from({ length: 25 }, (_, i) => i + 1))
+    const [arr, setArr] = useState([])
+    const [isSorting, setIsSorting] = useState(false)
+    const [showAlert, setShowAlert] = useState(false)
 
-    function shuffleArray() {
-        const arr = [...numArray]
-        const shuffledArray = arr.sort(() => Math.random() - 0.5)
-        setNumArray(shuffledArray)
+    useEffect(initializeArray, [])
+
+    function initializeArray() {
+        if (isSorting) {
+            showAlertMessage()
+            return
+        }
+        const arr = Array.from({ length: BAR_COUNT }, (_, i) => i + 1)
+        shuffle(arr)
+        setArr(arr)
     }
 
-    useEffect(shuffleArray,[]);
-
     function showSorting(swaps) {
-        swaps.forEach((swap, index) => {
+        if (isSorting) {
+            showAlertMessage()
+            return
+        }
+        setIsSorting(true)
+        swaps.forEach((swapPair, index) => {
             setTimeout(() => {
-                setNumArray((prevArray)=> {
-                    const [i,j] = swap
+                setArr((prevArray) => {
+                    const [i, j] = swapPair
                     const arr = [...prevArray]
-                    const temp = arr[i]
-                    arr[i] = arr[j]
-                    arr[j] = temp
+                    swap(arr, i, j)
                     return arr;
                 })
-            }, index * 200);
+            }, index * DELAY)
         })
+        setTimeout(() => {
+            sortingCompleted()
+        }, swaps.length * DELAY);
+    }
+
+    function sortingCompleted() {
+        setIsSorting(false)
     }
 
     function showBubbleSort() {
-        const swaps = bubbleSort(numArray)
+        const swaps = bubbleSort(arr)
         showSorting(swaps)
     }
 
     function showInsertionSort() {
-        const swaps = insertionSort(numArray)
+        const swaps = insertionSort(arr)
         showSorting(swaps)
     }
 
+    function showAlertMessage() {
+        setShowAlert(true)
+        setTimeout(() => {
+            setShowAlert(false)
+        }, 3000);
+    }
+
     return (
-        <div className="">
-            <h1>Random Array</h1>
-            <button onClick={shuffleArray} className="p-1 border-2 rounded">Suffle Array</button>
-            <button onClick={showBubbleSort} className="p-1 border-2 rounded">BubbleSort</button>
-            <button onClick={showInsertionSort} className="p-1 border-2 rounded">InsertionSort</button>
-            <div className="flex absolute bottom-10 left-10 gap-1 items-end">
-                <Bars array={numArray} />
+        <div className="h-full w-full flex flex-col lg:flex-row-reverse border-2 bg-teal-100 border-teal-900 ">
+            <div className="lg:w-4/5 w-full h-full p-4">
+                <Bars array={arr} />
             </div>
+            <div className="lg:w-1/5 flex justify-center lg:min-w-12 lg:flex-col gap-4 p-2 bg-teal-500 border-2 border-t-4 lg:border-r-4 lg:border-t-2 border-teal-900 overflow-clip">
+                <button onClick={initializeArray} className="p-2 border-2 rounded font-bold bg-teal-100 text-teal-900 border-t-4 border-teal-900">Suffle Array</button>
+                <button onClick={showBubbleSort} className="p-2 border-2 rounded font-bold bg-teal-100 text-teal-900 border-t-4 border-teal-900">BubbleSort</button>
+                <button onClick={showInsertionSort} className="p-2 border-2 rounded font-bold bg-teal-100 text-teal-900 border-t-4 border-teal-900">InsertionSort</button>
+            </div>
+            {showAlert && <Alert />}
         </div>
-    );
+    )
 }
 
 export default SortingVisualizer

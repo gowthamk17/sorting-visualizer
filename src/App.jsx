@@ -3,7 +3,7 @@ import SortingVisualizer from './Components/SortingVisualizer'
 function App() {
 
   return (
-    <div>
+    <div className='h-screen'>
       <SortingVisualizer />
     </div>
   )
