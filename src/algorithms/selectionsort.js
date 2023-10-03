@@ -11,7 +11,8 @@ export default function getSelectionSort(arr) {
             }
         }
         if(min != i) {
-            swapList.push([[min, i], true])
+            swapList.push([[min, arr[i]], true])
+            swapList.push([[i, arr[min]], true])
             swap(arr, min, i)
         }
     }

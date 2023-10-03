@@ -30,26 +30,26 @@ function SortingVisualizer() {
 
     function showSorting(swaps) {
         setIsSorting(true)
-        swaps.forEach((swapPair, index) => {
-            console.log(swapPair)
+        swaps.forEach(([comparison, isSwap], index) => {
             setTimeout(() => {
-                setArr((prevArray) => {
-                    const isSwap = swapPair[1]
-                    const arr = [...prevArray]
-                    const swapIndex = swapPair[0]
-                    let i,j
-                    if(swapIndex < 2) {
-                        [i] = swapIndex
-                    } else {
-                        [i,j] = swapIndex
-                    }
-                    if(isSwap) {
-                        swap(arr, i, j)
-                    }
-                    animateComparision(i)
-                    animateComparision(j)
-                    return arr
-                })
+                if(isSwap) {
+                    setArr((prevArray) => {
+                        const arr = [...prevArray]
+                        const [i, newVal] = comparison
+                        arr[i] = newVal
+                        return arr
+                    })
+                } else {
+                    comparison.forEach((compare) => {animateComparision(compare)})
+                    // if(comparison.length == 2) {
+                    //     const [i, j] = comparison
+                    //     animateComparision(i)
+                    //     animateComparision(j)
+                    // } else {
+                    //     const[i] = comparison
+                    //     animateComparision(i)
+                    // }
+                }
             }, index * DELAY)
         })
         setTimeout(() => {
@@ -151,7 +151,7 @@ function SortingVisualizer() {
             <div className="lg:w-1/5 h-fit lg:h-full flex lg:justify-center lg:flex-col gap-4 p-2 overflow-x-scroll space-x-4 lg:space-x-0 lg:overflow-x-hidden bg-teal-500 border-2 border-t-4 lg:border-r-4 lg:border-t-2 border-teal-900">
                 <button onClick={initializeArray} className="p-2 border-2 rounded font-bold bg-teal-100 text-teal-900 border-t-4 border-teal-900">SuffleArray</button>
                 <button onClick={showQuickSort} className="p-2 border-2 rounded font-bold bg-teal-100 text-teal-900 border-t-4 border-teal-900">QuickSort</button>
-                {/* <button onClick={showMergeSort} className="p-2 border-2 rounded font-bold bg-teal-100 text-teal-900 border-t-4 border   -teal-900">MergeSort</button> */}
+                <button onClick={showMergeSort} className="p-2 border-2 rounded font-bold bg-teal-100 text-teal-900 border-t-4 border-teal-900">MergeSort</button>
                 <button onClick={showBubbleSort} className="p-2 border-2 rounded font-bold bg-teal-100 text-teal-900 border-t-4 border-teal-900">BubbleSort</button>
                 <button onClick={showSelectionSort} className="p-2 border-2 rounded font-bold bg-teal-100 text-teal-900 border-t-4 border-teal-900">SelectionSort</button>
                 <button onClick={showInsertionSort} className="p-2 border-2 rounded font-bold bg-teal-100 text-teal-900 border-t-4 border-teal-900">InsertionSort</button>

@@ -11,11 +11,18 @@ export default function getQuickSort(array, start, end) {
     var rStart = start, rEnd = end
     var pivot = array[Math.floor(Math.random() * (end - start + 1) + start)]
     while (start < end) {
-      while (array[start] <= pivot) start++
-      while (array[end] > pivot) end--
+      while (array[start] <= pivot) {
+        swapList.push([[start], false])
+        start++
+      } 
+      while (array[end] > pivot) {
+        swapList.push([[end], false])
+        end--
+      }
       if (start < end) {
+        swapList.push([[start, array[end]], true])
+        swapList.push([[end, array[start]], true])
         swap(array, start, end)
-        swapList.push([[start, end], true])
       }
     }
     swapList.push(...getQuickSort(array, rStart, start - 1))
